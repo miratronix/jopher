@@ -1,4 +1,4 @@
-# promise [![Documentation](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/augustoroman/promise)
+# promise [![Documentation](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/miratronix/promise)
 
 Package promise provides support for returning Promises in gopherjs.
 The simplest usage is to use the Promisify() function to convert a
