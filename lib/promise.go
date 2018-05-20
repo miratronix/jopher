@@ -5,7 +5,7 @@ import "github.com/gopherjs/gopherjs/js"
 type state int
 
 const (
-	pending  state = iota
+	pending state = iota
 	resolved
 	rejected
 )

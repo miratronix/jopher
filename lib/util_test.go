@@ -1,12 +1,12 @@
 package lib
 
 import (
-	"testing"
 	. "github.com/smartystreets/goconvey/convey"
+	"testing"
 
-	"reflect"
 	"errors"
 	"github.com/gopherjs/gopherjs/js"
+	"reflect"
 )
 
 func TestReflectFunction(t *testing.T) {
@@ -225,7 +225,7 @@ func TestSplitResults(t *testing.T) {
 func TestHasLastError(t *testing.T) {
 
 	Convey("Returns false if the function returns nothing", t, func() {
-		none := reflect.ValueOf(func(){})
+		none := reflect.ValueOf(func() {})
 		So(hasLastError(none.Type()), ShouldBeFalse)
 	})
 

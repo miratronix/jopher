@@ -1,8 +1,8 @@
 package lib
 
 import (
-	"testing"
 	. "github.com/smartystreets/goconvey/convey"
+	"testing"
 )
 
 func TestResolve(t *testing.T) {

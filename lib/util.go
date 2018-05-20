@@ -1,9 +1,9 @@
 package lib
 
 import (
-	"reflect"
 	"errors"
 	"github.com/gopherjs/gopherjs/js"
+	"reflect"
 )
 
 // callback defines a callback function
