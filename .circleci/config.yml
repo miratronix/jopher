@@ -1,0 +1,12 @@
+version: 2
+jobs:
+  build:
+    docker: 
+      - image: circleci/golang:1.10.1
+    
+    working_directory: /go/src/github.com/miratronix/promise
+    steps:
+      - run: go get -u github.com/golang/dep/cmd/dep
+      - checkout
+      - run: dep ensure
+      - run: go test -v ./lib
