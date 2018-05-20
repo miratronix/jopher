@@ -1,4 +1,4 @@
-# promise [![Documentation](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/miratronix/promise)
+# promise [![CircleCI](https://circleci.com/gh/miratronix/promise.svg?style=svg)](https://circleci.com/gh/miratronix/promise) [![Documentation](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/miratronix/promise)
 
 Package promise provides support for returning Promises in gopherjs. The simplest usage is to use 
 the Promisify() function to convert a (potentially-blocking) function call into a promise.  This 
