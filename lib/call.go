@@ -25,6 +25,7 @@ func CallWithResultCallback(jsObject *js.Object, fn string, args ...interface{})
 	// Call the function
 	jsObject.Call(fn, args...)
 
+	// Await the callback
 	result := <-resultChannel
 	return result.result, ToGoError(result.err)
 }
@@ -39,8 +40,10 @@ func CallWithErrorCallback(jsObject *js.Object, fn string, args ...interface{}) 
 		errorChannel <- err
 	})
 
+	// Call the function
 	jsObject.Call(fn, args...)
 
+	// Await the callback
 	err := <-errorChannel
 	return ToGoError(err)
 }
