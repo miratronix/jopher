@@ -1,4 +1,4 @@
-package promise
+package jopher
 
 import (
 	"github.com/gopherjs/gopherjs/js"
