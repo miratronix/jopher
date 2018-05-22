@@ -2,7 +2,7 @@ package jopher
 
 import (
 	"github.com/gopherjs/gopherjs/js"
-	"github.com/miratronix/promise/lib"
+	"github.com/miratronix/jopher/lib"
 )
 
 // Promise exposes the underlying promise structure
