@@ -35,7 +35,7 @@ func CallAsync(resolve func(interface{}), reject func(interface{}), fn reflect.V
 		value, err := splitResults(results, hasError)
 
 		if err != nil {
-			reject(err)
+			reject(err.Error())
 			return
 		}
 

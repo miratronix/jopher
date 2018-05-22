@@ -100,7 +100,7 @@ func TestCallAsync(t *testing.T) {
 
 		CallAsync(none, reject, ReflectFunction(func() error { return errors.New("nope") }))
 		result := <-ch
-		So(result, ShouldResemble, errors.New("nope"))
+		So(result, ShouldEqual, "nope")
 	})
 
 	Convey("Calls reject with the error if the function returns an error as the last result", t, func() {
@@ -111,7 +111,7 @@ func TestCallAsync(t *testing.T) {
 
 		CallAsync(none, reject, ReflectFunction(func() (int, error) { return 3, errors.New("nope") }))
 		result := <-ch
-		So(result, ShouldResemble, errors.New("nope"))
+		So(result, ShouldEqual, "nope")
 	})
 }
 
