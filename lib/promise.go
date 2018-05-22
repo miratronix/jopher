@@ -93,14 +93,6 @@ func (p *Promise) JS() *js.Object {
 		return p.Catch(newCallback(failure)).JS()
 	})
 
-	wrapper.Set("resolve", func(value *js.Object) {
-		p.Resolve(value)
-	})
-
-	wrapper.Set("reject", func(value *js.Object) {
-		p.Resolve(value)
-	})
-
 	return wrapper
 }
 

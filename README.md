@@ -1,8 +1,8 @@
 # promise [![CircleCI](https://circleci.com/gh/miratronix/promise.svg?style=svg)](https://circleci.com/gh/miratronix/promise) [![Documentation](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/miratronix/promise)
 
-Package promise provides support for returning Promises in gopherjs. The simplest usage is to use 
-the Promisify() function to convert a (potentially-blocking) function call into a promise.  This 
-allows for easily converting a typical synchronous Go API into a promise-based JS api.
+promise provides support for returning Promises in gopherjs. The simplest usage is to use the 
+Promisify() function to convert a (potentially-blocking) function call into a promise.  This allows 
+for easily converting a typical synchronous Go API into a promise-based JS api.
 
 ## Installation
 Use dep to install:
@@ -36,9 +36,9 @@ wrapped instance of `Promise`. A `Promise` has the following the methods:
     Shortcut method for specifying only the failure callback in a `then`. This is exposed to javascript 
     as `catch()`.
 * `Resolve(value interface{})` - 
-    Allows for manual resolving of the promise. This is exposed to javascript as `resolve()`.
+    Allows for manual resolving of the promise.
 * `Reject(value interface{})` - 
-    Allows for manual rejecting of the promise. This is exposed to javascript as `reject()`.
+    Allows for manual rejecting of the promise.
 
 ## Examples
 
@@ -131,9 +131,9 @@ func httpCall() *js.Object {
 	go func() {
 		response, err := http.Get("/someAPI")
 		if err != nil {
-			p.reject(err)
+			p.Reject(err)
 		}
-		p.resolve(response)
+		p.Resolve(response)
 	}()
 
 	return p.JS()
