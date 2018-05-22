@@ -19,8 +19,8 @@ func Promisify(function interface{}) interface{} {
 	}
 }
 
-// New creates a new promise
-func New(function func(resolve func(interface{}), reject func(interface{}))) *js.Object {
+// NewPromise creates a new promise
+func NewPromise(function func(resolve func(interface{}), reject func(interface{}))) *js.Object {
 	promise := lib.Promise{}
 	go function(promise.Resolve, promise.Reject)
 	return promise.JS()
@@ -39,3 +39,14 @@ func Reject(value interface{}) *js.Object {
 	p.Resolve(value)
 	return p.JS()
 }
+
+// CallWithResultCallback calls a function in the supplied JS object, appending a callback to the
+// argument list and returning once that is called.
+var CallWithResultCallback = lib.CallWithResultCallback
+
+// CallWithErrorCallback calls a function in the supplied JS object, with the supplied arguments. It
+// appends a callback to the end of the argument list that accepts an error.
+var CallWithErrorCallback = lib.CallWithErrorCallback
+
+// ToGoError translates a javascript error to a go error
+var ToGoError = lib.ToGoError
