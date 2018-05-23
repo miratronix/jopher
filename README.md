@@ -35,23 +35,6 @@ This package exposes several utility functions:
 * `ToGoError(jsError *js.Error) error` -
     Converts a javascript error object to a Go error.
 
-### Promises
-This package exposes utility methods for dealing with promises in gopherJS. Many of them return a JS
-wrapped instance of `Promise`. A `Promise` has the following the methods:
-* `Then(success, failure func(interface{}) interface{}})` - 
-    Adds success/failure callbacks to the promise and returns a new promise. Either of these callbacks 
-    can be nil. If the success callback returns a value, it will be returned to child promises. If the 
-    success callback panics, child promises will be rejected. If the failure callback panics, the 
-    failure will be propagated to child promises. However, if the reject callback does not panic, it's 
-    return value will be returned to child promises. This function is exposed to javascript as `then()`.
-* `Catch(failure func(interface{}) interface{}})` - 
-    Shortcut method for specifying only the failure callback in a `then`. This is exposed to javascript 
-    as `catch()`.
-* `Resolve(value interface{})` - 
-    Allows for manual resolving of the promise.
-* `Reject(value interface{})` - 
-    Allows for manual rejecting of the promise.
-
 ## Examples
 
 ### Promisify
@@ -124,30 +107,6 @@ func httpCall() *js.Object {
 
 	// Or a rejected one
 	return jopher.Reject(2)
-}
-```
-
-### Manual Promise Construction
-Finally, you can also construct and manage the promise manually. For example:
-```go
-import "github.com/miratronix/jopher"
-
-func main() {
-	js.Global.Set("httpCall", httpCall)
-}
-
-func httpCall() *js.Object {
-	p := jopher.Promise{}
-
-	go func() {
-		response, err := http.Get("/someAPI")
-		if err != nil {
-			p.Reject(err)
-		}
-		p.Resolve(response)
-	}()
-
-	return p.JS()
 }
 ```
 

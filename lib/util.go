@@ -2,12 +2,8 @@ package lib
 
 import (
 	"errors"
-	"github.com/gopherjs/gopherjs/js"
 	"reflect"
 )
-
-// callback defines a callback function
-type callback func(value interface{}) interface{}
 
 // ReflectFunction converts a supplied interface into a reflect.Value
 func ReflectFunction(function interface{}) reflect.Value {
@@ -20,40 +16,28 @@ func ReflectFunction(function interface{}) reflect.Value {
 	return reflected
 }
 
-// CallAsync calls a function, calling the supplied resolve.reject methods afterwards as necessary
-func CallAsync(resolve func(interface{}), reject func(interface{}), fn reflect.Value, args ...interface{}) {
-	go func() {
+// CallReflected calls a reflected function, returning the a slice of results and an error
+func CallReflected(fn reflect.Value, args ...interface{}) (interface{}, error) {
 
-		// Reflect all the arguments and call the function
-		reflectedArgs := reflectAll(args...)
-		results := fn.Call(reflectedArgs)
+	// Reflect all the arguments and call the function
+	reflectedArgs := reflectAll(args...)
+	results := fn.Call(reflectedArgs)
 
-		// Determine if the function returns an error as the last return value
-		hasError := hasLastError(fn.Type())
+	// Determine if the function returns an error as the last return value
+	hasError := hasLastError(fn.Type())
 
-		// Split the results into a slice of interfaces and an error value
-		value, err := splitResults(results, hasError)
-
-		if err != nil {
-			reject(err.Error())
-			return
-		}
-
-		resolve(value)
-	}()
+	// Split the results into a slice of interfaces and an error value
+	result, err := splitResults(results, hasError)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
-// newCallback converts a js function to a proper callback
-func newCallback(jsFunction *js.Object) callback {
-
-	// No function supplied, convert to nil
-	if jsFunction == nil || jsFunction == js.Undefined {
-		return nil
-	}
-
-	// Return a callback function
-	return func(val interface{}) interface{} {
-		return jsFunction.Invoke(val)
+// CallOnPanic calls the supplied function when a panic is recovered. Should be called in a defer
+func CallOnPanic(reject func(interface{})) {
+	if err := recover(); err != nil {
+		reject(err)
 	}
 }
 
@@ -110,6 +94,7 @@ func splitResults(results []reflect.Value, lastError bool) (interface{}, error) 
 	}
 }
 
+// hasLastError determines if the last return argument of a function is an error
 func hasLastError(t reflect.Type) bool {
 	count := t.NumOut()
 	if count == 0 {
