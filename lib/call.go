@@ -50,7 +50,7 @@ func CallWithErrorCallback(jsObject *js.Object, fn string, args ...interface{}) 
 
 // ToGoError translates a javascript error to a go error
 func ToGoError(jsError *js.Error) error {
-	if jsError == nil || jsError.Object == nil || jsError.String() == "null" {
+	if jsError == nil || jsError.Object == nil || jsError.Object == js.Undefined || jsError.String() == "null" {
 		return nil
 	}
 	return errors.New(jsError.String())

@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"errors"
-	"github.com/gopherjs/gopherjs/js"
 	"reflect"
 )
 
@@ -21,114 +20,80 @@ func TestReflectFunction(t *testing.T) {
 	})
 }
 
-func TestCallAsync(t *testing.T) {
+func TestCallReflected(t *testing.T) {
 
 	Convey("Calls the function with one supplied argument", t, func() {
-		none := func(interface{}) {}
-		reflected := ReflectFunction(func(ch chan bool) { ch <- true })
+		reflected := ReflectFunction(func(input *int) { *input++ })
 
-		ch := make(chan bool)
-		CallAsync(none, none, reflected, ch)
-		result := <-ch
-		So(result, ShouldBeTrue)
+		input := 1
+		CallReflected(reflected, &input)
+		So(input, ShouldEqual, 2)
 	})
 
 	Convey("Calls the function with two supplied arguments", t, func() {
-		none := func(interface{}) {}
-		reflected := ReflectFunction(func(ch1 chan bool, ch2 chan bool) {
-			ch1 <- true
-			ch2 <- true
+		reflected := ReflectFunction(func(input1 *int, input2 *int) {
+			*input1++
+			*input2++
 		})
 
-		ch1 := make(chan bool)
-		ch2 := make(chan bool)
-		CallAsync(none, none, reflected, ch1, ch2)
-		result := <-ch1
-		result = <-ch2
-		So(result, ShouldBeTrue)
+		input1 := 1
+		input2 := 2
+		CallReflected(reflected, &input1, &input2)
+		So(input1, ShouldEqual, 2)
+		So(input2, ShouldEqual, 3)
 	})
 
-	Convey("Calls resolve with nil when the function doesn't return anything", t, func() {
-		none := func(interface{}) {}
-
-		ch := make(chan interface{})
-		resolve := func(value interface{}) { ch <- value }
-
-		CallAsync(resolve, none, ReflectFunction(func() {}))
-		result := <-ch
+	Convey("Returns nil when the function doesn't return anything", t, func() {
+		result, err := CallReflected(ReflectFunction(func() {}))
 		So(result, ShouldBeNil)
+		So(err, ShouldBeNil)
 	})
 
-	Convey("Calls resolve with the value when the function returns a value", t, func() {
-		none := func(interface{}) {}
-
-		ch := make(chan interface{})
-		resolve := func(value interface{}) { ch <- value }
-
-		CallAsync(resolve, none, ReflectFunction(func() int { return 1 }))
-		result := <-ch
+	Convey("Returns the value when the function returns a value", t, func() {
+		result, err := CallReflected(ReflectFunction(func() int { return 1 }))
 		So(result, ShouldEqual, 1)
+		So(err, ShouldBeNil)
 	})
 
-	Convey("Calls resolve with a slice when the function returns multiple values", t, func() {
-		none := func(interface{}) {}
-
-		ch := make(chan interface{})
-		resolve := func(value interface{}) { ch <- value }
-
-		CallAsync(resolve, none, ReflectFunction(func() (int, int) { return 1, 2 }))
-		result := <-ch
+	Convey("Returns a slice when the function returns multiple values", t, func() {
+		result, err := CallReflected(ReflectFunction(func() (int, int) { return 1, 2 }))
 		So(result, ShouldResemble, []interface{}{1, 2})
+		So(err, ShouldBeNil)
 	})
 
-	Convey("Calls resolve with nil when the function returns a nil error", t, func() {
-		none := func(interface{}) {}
-
-		ch := make(chan interface{})
-		resolve := func(value interface{}) { ch <- value }
-
-		CallAsync(resolve, none, ReflectFunction(func() error { return nil }))
-		result := <-ch
+	Convey("Returns a nil error when the function returns a nil error", t, func() {
+		result, err := CallReflected(ReflectFunction(func() error { return nil }))
 		So(result, ShouldBeNil)
+		So(err, ShouldBeNil)
 	})
 
-	Convey("Calls reject with the error when the function returns a error", t, func() {
-		none := func(interface{}) {}
-
-		ch := make(chan interface{})
-		reject := func(value interface{}) { ch <- value }
-
-		CallAsync(none, reject, ReflectFunction(func() error { return errors.New("nope") }))
-		result := <-ch
-		So(result, ShouldEqual, "nope")
+	Convey("Returns the error when the function returns a error", t, func() {
+		result, err := CallReflected(ReflectFunction(func() error { return errors.New("nope") }))
+		So(result, ShouldBeNil)
+		So(err, ShouldResemble, errors.New("nope"))
 	})
 
-	Convey("Calls reject with the error if the function returns an error as the last result", t, func() {
-		none := func(interface{}) {}
-
-		ch := make(chan interface{})
-		reject := func(value interface{}) { ch <- value }
-
-		CallAsync(none, reject, ReflectFunction(func() (int, error) { return 3, errors.New("nope") }))
-		result := <-ch
-		So(result, ShouldEqual, "nope")
+	Convey("Returns the error if the function returns an error as the last result", t, func() {
+		result, err := CallReflected(ReflectFunction(func() (int, error) { return 3, errors.New("nope") }))
+		So(result, ShouldBeNil)
+		So(err, ShouldResemble, errors.New("nope"))
 	})
 }
 
-func TestNewCallback(t *testing.T) {
+func TestCallOnPanic(t *testing.T) {
 
-	Convey("Returns nil is nil is supplied", t, func() {
-		So(newCallback(nil), ShouldBeNil)
-	})
+	Convey("Calls the supplied function with the panic value if there is a panic", t, func() {
+		ch := make(chan interface{})
+		handleError := func(val interface{}) {
+			ch <- val
+		}
 
-	Convey("Returns nil if undefined is supplied", t, func() {
-		So(newCallback(js.Undefined), ShouldBeNil)
-	})
+		go func(){
+			defer CallOnPanic(handleError)
+			panic("nope")
+		}()
 
-	Convey("Returns a function", t, func() {
-		cb := newCallback(&js.Object{})
-		var expected callback = func(interface{}) interface{} { return nil }
-		So(cb, ShouldHaveSameTypeAs, expected)
+		So(<-ch, ShouldEqual, "nope")
 	})
 }
 
