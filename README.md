@@ -34,6 +34,14 @@ This package exposes several utility functions:
     a callback to the end of the argument list that accepts an error.
 * `ToGoError(jsError *js.Error) error` -
     Converts a javascript error object to a Go error.
+* `IsFunction(object *js.Object) bool` -
+    Determines if the supplied javascript object is a function.
+* `ForEach(object *js.Object, iterator func(key string, value *js.Object))` -
+    Iterates over the keys in a javascript object.
+* `ToSlice(array *js.Object) []interface{}` -
+    Converts a javascript object to a slice.
+* `ToMap(object *js.Object) map[string]interface{}` -
+    Converts a javascript object to a map.
 
 ## Examples
 

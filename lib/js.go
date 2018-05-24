@@ -3,6 +3,7 @@ package lib
 import (
 	"github.com/gopherjs/gopherjs/js"
 	"errors"
+	"reflect"
 )
 
 // CallWithResultCallback calls a function in the supplied JS object, appending a callback to the
@@ -12,7 +13,7 @@ func CallWithResultCallback(jsObject *js.Object, fn string, args ...interface{})
 	// Define a callback result structure
 	type callbackResult struct {
 		result *js.Object
-		err *js.Error
+		err    *js.Error
 	}
 
 	resultChannel := make(chan *callbackResult)
@@ -54,4 +55,26 @@ func ToGoError(jsError *js.Error) error {
 		return nil
 	}
 	return errors.New(jsError.String())
+}
+
+// IsFunction determines if the supplied JS object is a function
+func IsFunction(object *js.Object) bool {
+	return reflect.TypeOf(object.Interface()).Kind() == reflect.Func
+}
+
+// ForEach iterates over the keys in a JS object
+func ForEach(object *js.Object, iterator func(key string, value *js.Object)) {
+	js.Global.Get("Object").Call("keys", object).Call("forEach", func(key string) {
+		iterator(key, object.Get(key))
+	})
+}
+
+// ToSlice converts a JS object to a slice
+func ToSlice(array *js.Object) []interface{} {
+	return array.Interface().([]interface{})
+}
+
+// ToMap converts a JS object to a map
+func ToMap(object *js.Object) map[string]interface{} {
+	return object.Interface().(map[string]interface{})
 }

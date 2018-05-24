@@ -67,3 +67,15 @@ var CallWithErrorCallback = lib.CallWithErrorCallback
 
 // ToGoError translates a javascript error to a go error
 var ToGoError = lib.ToGoError
+
+// IsFunction determines if the supplied JS object is a function
+var IsFunction = lib.IsFunction
+
+// ForEach iterates over the keys in a JS object
+var ForEach = lib.ForEach
+
+// ToSlice converts a JS array to a slice
+var ToSlice = lib.ToSlice
+
+// ToMap converts a JS object to a map
+var ToMap = lib.ToMap
