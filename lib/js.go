@@ -62,6 +62,11 @@ func IsFunction(object *js.Object) bool {
 	return reflect.TypeOf(object.Interface()).Kind() == reflect.Func
 }
 
+// IsArray determines if the supplied JS object is an array
+func IsArray(object *js.Object) bool {
+	return reflect.TypeOf(object.Interface()).Kind() == reflect.Slice
+}
+
 // ForEach iterates over the keys in a JS object
 func ForEach(object *js.Object, iterator func(key string, value *js.Object)) {
 	js.Global.Get("Object").Call("keys", object).Call("forEach", func(key string) {
@@ -77,4 +82,9 @@ func ToSlice(array *js.Object) []interface{} {
 // ToMap converts a JS object to a map
 func ToMap(object *js.Object) map[string]interface{} {
 	return object.Interface().(map[string]interface{})
+}
+
+// HasKey determines if a object has a key
+func HasKey(object *js.Object, key string) bool {
+	return object.Call("hasOwnProperty", key).Bool()
 }

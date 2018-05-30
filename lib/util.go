@@ -41,6 +41,13 @@ func CallOnPanic(reject func(interface{})) {
 	}
 }
 
+// ThrowOnError throws when supplied an error
+func ThrowOnError(err error) {
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
 // reflectAll converts the supplied arguments to reflect values
 func reflectAll(args ...interface{}) []reflect.Value {
 	reflected := make([]reflect.Value, len(args))
