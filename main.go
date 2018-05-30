@@ -71,6 +71,9 @@ var ToGoError = lib.ToGoError
 // IsFunction determines if the supplied JS object is a function
 var IsFunction = lib.IsFunction
 
+// IsArray determines if the supplied JS object is an array
+var IsArray = lib.IsArray
+
 // ForEach iterates over the keys in a JS object
 var ForEach = lib.ForEach
 
@@ -79,3 +82,9 @@ var ToSlice = lib.ToSlice
 
 // ToMap converts a JS object to a map
 var ToMap = lib.ToMap
+
+// HasKey determines if a JS object has a key
+var HasKey = lib.HasKey
+
+// ThrowOnError throws when supplied an error
+var ThrowOnError = lib.ThrowOnError
