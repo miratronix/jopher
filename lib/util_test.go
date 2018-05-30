@@ -88,7 +88,7 @@ func TestCallOnPanic(t *testing.T) {
 			ch <- val
 		}
 
-		go func(){
+		go func() {
 			defer CallOnPanic(handleError)
 			panic("nope")
 		}()
