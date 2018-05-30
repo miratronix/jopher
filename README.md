@@ -36,12 +36,18 @@ This package exposes several utility functions:
     Converts a javascript error object to a Go error.
 * `IsFunction(object *js.Object) bool` -
     Determines if the supplied javascript object is a function.
+* `IsArray(object *js.Object) bool` -
+    Determines if the supplied javascript object is an array.
 * `ForEach(object *js.Object, iterator func(key string, value *js.Object))` -
     Iterates over the keys in a javascript object.
 * `ToSlice(array *js.Object) []interface{}` -
     Converts a javascript object to a slice.
 * `ToMap(object *js.Object) map[string]interface{}` -
     Converts a javascript object to a map.
+* `HasKey(object *js.Object, key string) bool` -
+    Determines if the supplied javascript object has the specified key.
+* `ThrowOnError(err error)` -
+    Throws when the supplied error is not nil.
 
 ## Examples
 
