@@ -49,6 +49,11 @@ func CallWithErrorCallback(jsObject *js.Object, fn string, args ...interface{}) 
 	return ToGoError(err)
 }
 
+// Require requires a node.js package
+func Require(module string) *js.Object {
+	return js.Global.Call("require", module)
+}
+
 // ToGoError translates a javascript error to a go error
 func ToGoError(jsError *js.Error) error {
 	if jsError == nil || jsError.Object == nil || jsError.Object == js.Undefined || jsError.String() == "null" {

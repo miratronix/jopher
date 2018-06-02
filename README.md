@@ -32,6 +32,8 @@ This package exposes several utility functions:
 * `CallWithErrorCallback(jsObject *js.Object, fn string, args ...interface{}) error` -
     Calls a function in the supplied JS object with the supplied arguments, automatically attaching
     a callback to the end of the argument list that accepts an error.
+* `Require(module string) *js.Object` -
+    Requires a module (only works in node or if a `require` polyfill is supplied).
 * `ToGoError(jsError *js.Error) error` -
     Converts a javascript error object to a Go error.
 * `IsFunction(object *js.Object) bool` -
