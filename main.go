@@ -65,6 +65,9 @@ var CallWithResultCallback = lib.CallWithResultCallback
 // appends a callback to the end of the argument list that accepts an error.
 var CallWithErrorCallback = lib.CallWithErrorCallback
 
+// Require requires a node.js package
+var Require = lib.Require
+
 // ToGoError translates a javascript error to a go error
 var ToGoError = lib.ToGoError
 
