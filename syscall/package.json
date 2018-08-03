@@ -2,7 +2,7 @@
   "name": "syscall",
   "version": "0.1.0",
   "description": "A simple NPM wrapper for the GopherJS syscall module",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "install": "node-gyp rebuild"
   },
