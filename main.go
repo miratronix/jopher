@@ -86,8 +86,17 @@ var ToSlice = lib.ToSlice
 // ToMap converts a JS object to a map
 var ToMap = lib.ToMap
 
+// ToString converts a JS object to a string
+var ToString = lib.ToString
+
 // HasKey determines if a JS object has a key
 var HasKey = lib.HasKey
 
+// Throw throws a JS object
+var Throw = lib.Throw
+
 // ThrowOnError throws when supplied an error
 var ThrowOnError = lib.ThrowOnError
+
+// NewObject creates a new JS object
+var NewObject = lib.NewObject
