@@ -2,6 +2,7 @@ package lib
 
 import (
 	"errors"
+	"github.com/gopherjs/gopherjs/js"
 	"reflect"
 )
 
@@ -39,6 +40,11 @@ func CallOnPanic(reject func(interface{})) {
 	if err := recover(); err != nil {
 		reject(err)
 	}
+}
+
+// Throw throws a JS object error
+func Throw(object *js.Object) {
+	panic(object)
 }
 
 // ThrowOnError throws when supplied an error

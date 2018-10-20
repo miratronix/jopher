@@ -1,8 +1,8 @@
 package lib
 
 import (
-	"github.com/gopherjs/gopherjs/js"
 	"errors"
+	"github.com/gopherjs/gopherjs/js"
 	"reflect"
 )
 
@@ -89,7 +89,21 @@ func ToMap(object *js.Object) map[string]interface{} {
 	return object.Interface().(map[string]interface{})
 }
 
+// ToString converts an object to a string
+func ToString(object *js.Object) string {
+	str := object.String()
+	if str == "[object Object]" {
+		str = js.Global.Get("JSON").Call("stringify", object).String()
+	}
+	return str
+}
+
 // HasKey determines if a object has a key
 func HasKey(object *js.Object, key string) bool {
 	return object.Call("hasOwnProperty", key).Bool()
+}
+
+// NewObject creates a new JS object
+func NewObject() *js.Object {
+	return js.Global.Get("Object").New()
 }

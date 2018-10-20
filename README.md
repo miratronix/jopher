@@ -46,10 +46,16 @@ This package exposes several utility functions:
     Converts a javascript object to a slice.
 * `ToMap(object *js.Object) map[string]interface{}` -
     Converts a javascript object to a map.
+* `ToString(object *js.Object) string` -
+    Converts a javascript object to a string.
 * `HasKey(object *js.Object, key string) bool` -
     Determines if the supplied javascript object has the specified key.
+* `Throw(object *js.Object)` -
+    Throws the supplied javascript object.
 * `ThrowOnError(err error)` -
     Throws when the supplied error is not nil.
+* `NewObject() *js.Object` -
+    Create a new javascript object.
 
 ## Examples
 
