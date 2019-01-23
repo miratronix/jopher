@@ -1,13 +1,12 @@
-package lib
+package jopher
 
 import (
 	"errors"
-	"github.com/gopherjs/gopherjs/js"
 	"reflect"
 )
 
-// ReflectFunction converts a supplied interface into a reflect.Value
-func ReflectFunction(function interface{}) reflect.Value {
+// reflectFunction converts a supplied interface into a reflect.Value
+func reflectFunction(function interface{}) reflect.Value {
 	reflected := reflect.ValueOf(function)
 
 	if reflected.Kind() != reflect.Func {
@@ -17,8 +16,8 @@ func ReflectFunction(function interface{}) reflect.Value {
 	return reflected
 }
 
-// CallReflected calls a reflected function, returning the a slice of results and an error
-func CallReflected(fn reflect.Value, args ...interface{}) (interface{}, error) {
+// callReflected calls a reflected function, returning the a slice of results and an error
+func callReflected(fn reflect.Value, args ...interface{}) (interface{}, error) {
 
 	// Reflect all the arguments and call the function
 	reflectedArgs := reflectAll(args...)
@@ -33,25 +32,6 @@ func CallReflected(fn reflect.Value, args ...interface{}) (interface{}, error) {
 		return nil, err
 	}
 	return result, nil
-}
-
-// CallOnPanic calls the supplied function when a panic is recovered. Should be called in a defer
-func CallOnPanic(reject func(interface{})) {
-	if err := recover(); err != nil {
-		reject(err)
-	}
-}
-
-// Throw throws a JS object error
-func Throw(object *js.Object) {
-	panic(object)
-}
-
-// ThrowOnError throws when supplied an error
-func ThrowOnError(err error) {
-	if err != nil {
-		panic(err.Error())
-	}
 }
 
 // reflectAll converts the supplied arguments to reflect values

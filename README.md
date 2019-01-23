@@ -9,54 +9,6 @@ Use dep to install:
 dep ensure -add github.com/miratronix/jopher
 ```
 
-## Usage
-
-### Exposed Functions
-This package exposes several utility functions:
-
-#### Promise-related
-* `Promisify(function interface{}) interface{}` - 
-    Promisifies an existing function, returning the new version.
-* `NewPromise(function func(resolve func(interface{}), reject func(interface{}))) *js.Object` - 
-    Constructs a new promise using a `(resolve, reject)` callback, similar to javascript.
-* `Resolve(value interface{}) *js.Object` - 
-    Returns a new promise that is resolved with the supplied value.
-* `Reject(value interface{}) *js.Object` - 
-    Returns a new promise that is rejected with the supplied value.
-
-#### Other Utilities
-* `CallWithResultCallback(jsObject *js.Object, fn string, args ...interface{}) (*js.Object, error)` -
-    Calls a function in the provided JS object, automatically attaching a callback parameter to the
-    end of the argument list. Returns when the JS callback is called with the appropriate value
-    or error.
-* `CallWithErrorCallback(jsObject *js.Object, fn string, args ...interface{}) error` -
-    Calls a function in the supplied JS object with the supplied arguments, automatically attaching
-    a callback to the end of the argument list that accepts an error.
-* `Require(module string) *js.Object` -
-    Requires a module (only works in node or if a `require` polyfill is supplied).
-* `ToGoError(jsError *js.Error) error` -
-    Converts a javascript error object to a Go error.
-* `IsFunction(object *js.Object) bool` -
-    Determines if the supplied javascript object is a function.
-* `IsArray(object *js.Object) bool` -
-    Determines if the supplied javascript object is an array.
-* `ForEach(object *js.Object, iterator func(key string, value *js.Object))` -
-    Iterates over the keys in a javascript object.
-* `ToSlice(array *js.Object) []interface{}` -
-    Converts a javascript object to a slice.
-* `ToMap(object *js.Object) map[string]interface{}` -
-    Converts a javascript object to a map.
-* `ToString(object *js.Object) string` -
-    Converts a javascript object to a string.
-* `HasKey(object *js.Object, key string) bool` -
-    Determines if the supplied javascript object has the specified key.
-* `Throw(object *js.Object)` -
-    Throws the supplied javascript object.
-* `ThrowOnError(err error)` -
-    Throws when the supplied error is not nil.
-* `NewObject() *js.Object` -
-    Create a new javascript object.
-
 ## Examples
 
 ### Promisify

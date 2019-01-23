@@ -9,4 +9,4 @@ jobs:
       - run: go get -u github.com/golang/dep/cmd/dep
       - checkout
       - run: dep ensure
-      - run: go test -v ./lib
+      - run: go test -v

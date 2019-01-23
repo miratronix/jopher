@@ -1,99 +1,81 @@
-package lib
+package jopher
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
-	"testing"
-
 	"errors"
+	. "github.com/smartystreets/goconvey/convey"
 	"reflect"
+	"testing"
 )
 
 func TestReflectFunction(t *testing.T) {
 
 	Convey("Converts a function to a reflect.Value", t, func() {
-		reflected := ReflectFunction(func() {})
+		reflected := reflectFunction(func() {})
 		So(reflected, ShouldHaveSameTypeAs, reflect.Value{})
 	})
 
 	Convey("Panics if a non-function is supplied", t, func() {
-		So(func() { ReflectFunction(0) }, ShouldPanic)
+		So(func() { reflectFunction(0) }, ShouldPanic)
 	})
 }
 
 func TestCallReflected(t *testing.T) {
 
 	Convey("Calls the function with one supplied argument", t, func() {
-		reflected := ReflectFunction(func(input *int) { *input++ })
+		reflected := reflectFunction(func(input *int) { *input++ })
 
 		input := 1
-		CallReflected(reflected, &input)
+		callReflected(reflected, &input)
 		So(input, ShouldEqual, 2)
 	})
 
 	Convey("Calls the function with two supplied arguments", t, func() {
-		reflected := ReflectFunction(func(input1 *int, input2 *int) {
+		reflected := reflectFunction(func(input1 *int, input2 *int) {
 			*input1++
 			*input2++
 		})
 
 		input1 := 1
 		input2 := 2
-		CallReflected(reflected, &input1, &input2)
+		callReflected(reflected, &input1, &input2)
 		So(input1, ShouldEqual, 2)
 		So(input2, ShouldEqual, 3)
 	})
 
 	Convey("Returns nil when the function doesn't return anything", t, func() {
-		result, err := CallReflected(ReflectFunction(func() {}))
+		result, err := callReflected(reflectFunction(func() {}))
 		So(result, ShouldBeNil)
 		So(err, ShouldBeNil)
 	})
 
 	Convey("Returns the value when the function returns a value", t, func() {
-		result, err := CallReflected(ReflectFunction(func() int { return 1 }))
+		result, err := callReflected(reflectFunction(func() int { return 1 }))
 		So(result, ShouldEqual, 1)
 		So(err, ShouldBeNil)
 	})
 
 	Convey("Returns a slice when the function returns multiple values", t, func() {
-		result, err := CallReflected(ReflectFunction(func() (int, int) { return 1, 2 }))
+		result, err := callReflected(reflectFunction(func() (int, int) { return 1, 2 }))
 		So(result, ShouldResemble, []interface{}{1, 2})
 		So(err, ShouldBeNil)
 	})
 
 	Convey("Returns a nil error when the function returns a nil error", t, func() {
-		result, err := CallReflected(ReflectFunction(func() error { return nil }))
+		result, err := callReflected(reflectFunction(func() error { return nil }))
 		So(result, ShouldBeNil)
 		So(err, ShouldBeNil)
 	})
 
 	Convey("Returns the error when the function returns a error", t, func() {
-		result, err := CallReflected(ReflectFunction(func() error { return errors.New("nope") }))
+		result, err := callReflected(reflectFunction(func() error { return errors.New("nope") }))
 		So(result, ShouldBeNil)
 		So(err, ShouldResemble, errors.New("nope"))
 	})
 
 	Convey("Returns the error if the function returns an error as the last result", t, func() {
-		result, err := CallReflected(ReflectFunction(func() (int, error) { return 3, errors.New("nope") }))
+		result, err := callReflected(reflectFunction(func() (int, error) { return 3, errors.New("nope") }))
 		So(result, ShouldBeNil)
 		So(err, ShouldResemble, errors.New("nope"))
-	})
-}
-
-func TestCallOnPanic(t *testing.T) {
-
-	Convey("Calls the supplied function with the panic value if there is a panic", t, func() {
-		ch := make(chan interface{})
-		handleError := func(val interface{}) {
-			ch <- val
-		}
-
-		go func() {
-			defer CallOnPanic(handleError)
-			panic("nope")
-		}()
-
-		So(<-ch, ShouldEqual, "nope")
 	})
 }
 
