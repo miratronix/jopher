@@ -47,6 +47,11 @@ func Throw(object *js.Object) {
 // ThrowOnError throws when the supplied error is not nil.
 func ThrowOnError(err error) {
 	if err != nil {
-		panic(err.Error())
+		panic(NewError(err.Error()))
 	}
+}
+
+// NewError creates a new JS error.
+func NewError(message string) *js.Object {
+	return js.Global.Get("Error").New(message)
 }
