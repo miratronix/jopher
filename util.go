@@ -27,6 +27,22 @@ func ForEach(object *js.Object, iterator func(key string, value *js.Object)) {
 	})
 }
 
+// Keys gets the keys in a javascript object.
+func Keys(object *js.Object) []string {
+	keySlice := ToSlice(js.Global.Get("Object").Call("keys", object))
+	stringSlice := make([]string, 0, len(keySlice))
+
+	for _, value := range keySlice {
+		stringValue, ok := value.(string)
+		if !ok {
+			continue
+		}
+		stringSlice = append(stringSlice, stringValue)
+	}
+
+	return stringSlice
+}
+
 // HasKey determines if the supplied javascript object has the specified key.
 func HasKey(object *js.Object, key string) bool {
 	return object.Call("hasOwnProperty", key).Bool()
@@ -37,7 +53,7 @@ func NewObject() *js.Object {
 	return js.Global.Get("Object").New()
 }
 
-// NewISODate creates a new RFC3339 date string using a JS native call.
+// NewISODate creates a new RFC3339 date string using a javascript native call.
 func NewISODate() string {
 	return js.Global.Get("Date").New().Call("toISOString").String()
 }
